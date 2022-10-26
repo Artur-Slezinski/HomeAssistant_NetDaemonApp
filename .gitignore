@@ -4,3 +4,13 @@ bin
 .vs
 *.gen
 .idea
+update_all_dependencies.ps1
+Properties/launchSettings.json
+NetDaemonApps.sln
+NetDaemonApps.csproj
+HomeAssistantGenerated.cs
+Dockerfile
+appsettings.json
+.vscode/launch.json
+.devcontainer/devcontainer.json
+.vscode/tasks.json

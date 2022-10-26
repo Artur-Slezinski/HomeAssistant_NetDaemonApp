@@ -1,12 +1,6 @@
 ﻿// Use unique namespaces for your apps if you going to share with others to avoid
 // conflicting names
 
-
-using HomeAssistantGenerated;
-using NetDaemon.HassModel;
-using Serilog;
-
-
 namespace HassModel;
 [NetDaemonApp]
 
@@ -16,23 +10,39 @@ public class TempAndHumidity
     private readonly ILogger<TempAndHumidity> _log;
     private readonly Entities _myEntities;
     private readonly Services _services;
+    public readonly ITextToSpeechService tts;
 
-    public TempAndHumidity(IHaContext ha)
+    public TempAndHumidity(IHaContext ha, ITextToSpeechService tts )
     {
         var _myEntities = new Entities(ha);
-        var _services = new Services(ha);
+        var _services = new Services(ha); 
+        var _tts = tts;
+
 
         //ha.Entity("switch.nodemcu_internal_led")
         //    .StateChanges().Where(e => e.New?.State == "off")
         //    .Subscribe(_ => ha.CallService("notify", "persistent_notification", data: new { message = "LED", title = "ON" }));
 
-        upTemp(_myEntities, _services);
-        downTemp(_myEntities, _services);
-        // InformTemp(_services);
+        //upTemp(_myEntities, _services);
+        //downTemp(_myEntities, _services);
+
+        // InformTemp(_services);         
+        
+        _services.Notify.MobileAppSmG996b("TTS" /*, data: "tts_text: test"*/);
+        LED(_myEntities, _services, _tts);
+    }
+
+    public void MyTtsApp(ITextToSpeechService tts)
+    {
+        // This uses the google service you may use some other like google cloud version, google_cloud_say
+        //tts.Speak("SmG996b", "Hello this is first queued message", "notify.mobile_app_SmG996b", "pl");
+        
+        //tts.Speak("Sm_G996b", "Hello this is first queued message", "notify.mobile", "pl");
+        //tts.Speak("NotifyMobileAppSmG996bParameters", "test", "google_say");
     }
 
     private void upTemp(Entities entities, Services services)
-    {
+    {        
         NumericSensorEntity outdoorTemperature = entities.Sensor.Outdoortemp;
         outdoorTemperature
             .StateChanges()
@@ -42,6 +52,23 @@ public class TempAndHumidity
 
     private void downTemp(Entities entities, Services services)
     {
+        NumericSensorEntity outdoorTemperature = entities.Sensor.Outdoortemp;
+        outdoorTemperature
+            .StateChanges()
+            .Where(e => outdoorTemperature.AsNumeric().State > 25.0)
+            .Subscribe(_ => services.Switch.TurnOff(ServiceTarget.FromEntities("switch.outdoormcuinternalled", "switch.outdoormcuinternalled")));
+    }
+
+
+    private void LED(Entities entities, Services services, ITextToSpeechService tts)
+    {
+        SwitchEntity led = entities.Switch.Outdoormcuinternalled;
+        if (led.IsOff())
+        {
+            MyTtsApp(tts); 
+        }
+
+
         NumericSensorEntity outdoorTemperature = entities.Sensor.Outdoortemp;
         outdoorTemperature
             .StateChanges()

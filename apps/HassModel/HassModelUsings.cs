@@ -11,3 +11,4 @@ global using NetDaemon.HassModel.Integration;
 global using HomeAssistantGenerated;
 global using NetDaemon.HassModel;
 global using Serilog;
+global using System.Reactive.Concurrency;

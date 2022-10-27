@@ -10,10 +10,9 @@ public class TempAndHumidity
     public TempAndHumidity(IHaContext ha, IScheduler scheduler)
     {
         var _myEntities = new Entities(ha);
-        var _services = new Services(ha);       
-        var _scheduler = scheduler;
-
-        _scheduler.Schedule(TimeSpan.FromSeconds(5), XLED);
+        var _services = new Services(ha);   
+        
+        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(5), XLED);
 
         void XLED()
         {

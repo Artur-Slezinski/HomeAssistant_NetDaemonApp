@@ -28,15 +28,17 @@ public class TempAndHumidity
 
         // InformTemp(_services);         
         
-        _services.Notify.MobileAppSmG996b("TTS" /*, data: "tts_text: test"*/);
+       
         LED(_myEntities, _services, _tts);
     }
 
-    public void MyTtsApp(ITextToSpeechService tts)
+    public void MyTtsApp(string message, Services services)
     {
+        
+        services.Notify.MobileAppSmG996b("TTS", data: new { tts_text = message });
         // This uses the google service you may use some other like google cloud version, google_cloud_say
         //tts.Speak("SmG996b", "Hello this is first queued message", "notify.mobile_app_SmG996b", "pl");
-        
+
         //tts.Speak("Sm_G996b", "Hello this is first queued message", "notify.mobile", "pl");
         //tts.Speak("NotifyMobileAppSmG996bParameters", "test", "google_say");
     }
@@ -62,12 +64,14 @@ public class TempAndHumidity
 
     private void LED(Entities entities, Services services, ITextToSpeechService tts)
     {
+        string message = "test";
         SwitchEntity led = entities.Switch.Outdoormcuinternalled;
-        if (led.IsOff())
-        {
-            MyTtsApp(tts); 
-        }
+        led
+            .StateChanges()
+            .Where(e => e.New?.State == "off")
+            .Subscribe(_ => services.Notify.MobileAppSmG996b("TTS", data: new { tts_text = message }));
 
+       
 
         NumericSensorEntity outdoorTemperature = entities.Sensor.Outdoortemp;
         outdoorTemperature

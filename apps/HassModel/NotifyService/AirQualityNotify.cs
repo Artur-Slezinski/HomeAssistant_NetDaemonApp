@@ -8,13 +8,9 @@ public class AirQualityNotify
     {
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);
+        
+        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(10), () => AirQuality(_myEntities, _services));
 
-        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(10), StartedPeriodiclyAt10Seconds);
-
-        void StartedPeriodiclyAt10Seconds()
-        {
-            AirQuality(_myEntities, _services);
-        }
         AirQuality(_myEntities, _services);
     }
 
@@ -28,7 +24,7 @@ public class AirQualityNotify
         if (Pm25 >= 15 || Pm10 >= 35)
         {
             services.Notify.MobileAppSmG996b
-                ("TTS",
+                (message: "TTS",
                 data: new { tts_text = "Sąsiedzi palą śmieciami, nie wychodź z domu!" });
             services.Notify.MobileAppSmG996b
                 (title: "Jakość powietrza",
@@ -39,7 +35,7 @@ public class AirQualityNotify
         else if (Pm25 >= 12 && Pm25 < 15 || Pm10 >= 25 && Pm10 < 35)
         {
             services.Notify.MobileAppSmG996b
-                ("TTS",
+                (message: "TTS",
                 data: new { tts_text = "Unikaj spacerów, podwyższone stężenie pyłów zawieszonych!" });
             services.Notify.MobileAppSmG996b
                 (title: "Jakość powietrza", message: $"💨 podwyższone stężenie pyłów zawieszonych!",
@@ -53,10 +49,5 @@ public class AirQualityNotify
                 data: new { tag = "AirQualityNotification" });
         }
     }
-    public void MyTtsApp(string message, Services services)
-    {
-        services.Notify.MobileAppSmG996b("TTS", data: new { tts_text = message });
-    }
-
 }
 

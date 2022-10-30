@@ -10,14 +10,9 @@ public class LivingRoomStatePresence
     {
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);
-
-        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), StartedPeriodiclyAt30Seconds);
-
-        void StartedPeriodiclyAt30Seconds()
-        {
-            TempRingColour(_myEntities, _services);
-        }
-        
+              
+        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => TempRingColour(_myEntities, _services));
+                
         TempRingColour(_myEntities, _services);
     }
     private void TempRingColour(Entities entities, Services services)

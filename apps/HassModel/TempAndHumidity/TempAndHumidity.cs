@@ -71,19 +71,36 @@ public class TempAndHumidity
 
     private void AirQuality(Entities entities, Services services)
     {
+        var Pm25 = entities.Sensor.DomPm25.AsNumeric().State;
+        var Pm10 = entities.Sensor.DomPm10.AsNumeric().State;
+        
         services.Notify.MobileAppSmG996b(message: "clear_notification", data: new { tag = "AirQualityNotification" });
 
-        if (entities.Sensor.DomPm25.AsNumeric().State >= 15 && entities.Sensor.DomPm10.AsNumeric().State >= 35)
+        if (Pm25 >= 15 || Pm10 >= 35)
         {
-            services.Notify.MobileAppSmG996b("TTS", data: new { tts_text = "Sąsiedzi palą śmieciami, nie wychodź z domu!" });
-            services.Notify.MobileAppSmG996b(title: "Jakość powietrza", message: $"🌋 jest tragiczna", data: new { tag = "AirQualityNotification" });
+            services.Notify.MobileAppSmG996b
+                ("TTS", 
+                data: new { tts_text = "Sąsiedzi palą śmieciami, nie wychodź z domu!" });
+            services.Notify.MobileAppSmG996b
+                (title: "Jakość powietrza", 
+                message: $"🌋 jest tragiczna", 
+                data: new { tag = "AirQualityNotification" });
         }
 
-        else if (entities.Sensor.DomPm25.AsNumeric().State >= 10 && entities.Sensor.DomPm25.AsNumeric().State < 15
-            && entities.Sensor.DomPm10.AsNumeric().State >= 25 && entities.Sensor.DomPm10.AsNumeric().State < 35)
+        else if (Pm25 >= 10 && Pm25 < 15 || Pm10 >= 25 && Pm10 < 35)
         {
-            services.Notify.MobileAppSmG996b("TTS", data: new { tts_text = "Unikaj spacerów, podwyższone stężenie pyłów zawieszonych!" });
-            services.Notify.MobileAppSmG996b(title: "Jakość powietrza", message: $"💨 podwyższone stężenie pyłów zawieszonych!", data: new { tag = "AirQualityNotification" });
+            services.Notify.MobileAppSmG996b
+                ("TTS", data: new { tts_text = "Unikaj spacerów, podwyższone stężenie pyłów zawieszonych!" });
+            services.Notify.MobileAppSmG996b
+                (title: "Jakość powietrza", message: $"💨 podwyższone stężenie pyłów zawieszonych!", 
+                data: new { tag = "AirQualityNotification" });
+        }
+        else
+        {
+            services.Notify.MobileAppSmG996b
+                (title: "Jakość powietrza", 
+                message: $"💨 podwyższone stężenie pyłów zawieszonych!", 
+                data: new { tag = "AirQualityNotification" });
         }
     }
     public void MyTtsApp(string message, Services services)

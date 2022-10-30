@@ -18,6 +18,7 @@ public class AirQualityNotify
     {
         var Pm25 = entities.Sensor.DomPm25.AsNumeric().State;
         var Pm10 = entities.Sensor.DomPm10.AsNumeric().State;
+        string notifyMessage = null;       
 
         services.Notify.MobileAppSmG996b(message: "clear_notification", data: new { tag = "AirQualityNotification" });
 
@@ -26,10 +27,8 @@ public class AirQualityNotify
             services.Notify.MobileAppSmG996b
                 (message: "TTS",
                 data: new { tts_text = "Sąsiedzi palą śmieciami, nie wychodź z domu!" });
-            services.Notify.MobileAppSmG996b
-                (title: "Jakość powietrza",
-                message: $"🌋 jest tragiczna",
-                data: new { tag = "AirQualityNotification" });
+
+            notifyMessage = $"🌋 jest tragiczna";
         }
 
         else if (Pm25 >= 12 && Pm25 < 15 || Pm10 >= 25 && Pm10 < 35)
@@ -37,17 +36,18 @@ public class AirQualityNotify
             services.Notify.MobileAppSmG996b
                 (message: "TTS",
                 data: new { tts_text = "Unikaj spacerów, podwyższone stężenie pyłów zawieszonych!" });
-            services.Notify.MobileAppSmG996b
-                (title: "Jakość powietrza", message: $"💨 podwyższone stężenie pyłów zawieszonych!",
-                data: new { tag = "AirQualityNotification" });
+                       
+            notifyMessage = $"💨 podwyższone stężenie pyłów zawieszonych!";
         }
         else
         {
-            services.Notify.MobileAppSmG996b
-                (title: "Jakość powietrza",
-                message: $"🌞 jest w porządku!",
-                data: new { tag = "AirQualityNotification" });
+            notifyMessage = $"🌞 jest w porządku!";            
         }
+
+        services.Notify.MobileAppSmG996b
+               (title: "Jakość powietrza",
+               message: notifyMessage,
+               data: new { tag = "AirQualityNotification" });
     }
 }
 

@@ -27,39 +27,33 @@ public class TempAndHumidity
         var temp = entities.Sensor.Outdoortemp.AsNumeric().State;
         if (temp <= -15)
         {
-            color = "darkslateblue";
-            TempRing(entities, services, color);
+            color = "darkslateblue";            
         }
         else if (temp > -15 && temp <= -5)
         {
-            color = "blue";
-            TempRing(entities, services, color);
+            color = "blue";            
         }
         else if (temp > -5 && temp <= 5)
         {
-            color = "aqua";
-            TempRing(entities, services, color);
+            color = "aqua";            
         }
         else if (temp > 5 && temp <= 15)
         {
-            color = "greenyellow";
-            TempRing(entities, services, color);
+            color = "greenyellow";            
         }
         else if (temp > 15 && temp <= 25)
         {
-            color = "green";
-            TempRing(entities, services, color);
+            color = "green";           
         }
         else if (temp > 25 && temp <= 35)
         {
-            color = "orange";
-            TempRing(entities, services, color);
+            color = "orange";            
         }
         else if (temp > 35)
         {
-            color = "red";
-            TempRing(entities, services, color);
+            color = "red";            
         }
+        TempRing(entities, services, color);
     }
 
     private void TempRing(Entities entities, Services services, string color)
@@ -73,33 +67,33 @@ public class TempAndHumidity
     {
         var Pm25 = entities.Sensor.DomPm25.AsNumeric().State;
         var Pm10 = entities.Sensor.DomPm10.AsNumeric().State;
-        
+
         services.Notify.MobileAppSmG996b(message: "clear_notification", data: new { tag = "AirQualityNotification" });
 
         if (Pm25 >= 15 || Pm10 >= 35)
         {
             services.Notify.MobileAppSmG996b
-                ("TTS", 
+                ("TTS",
                 data: new { tts_text = "Sąsiedzi palą śmieciami, nie wychodź z domu!" });
             services.Notify.MobileAppSmG996b
-                (title: "Jakość powietrza", 
-                message: $"🌋 jest tragiczna", 
+                (title: "Jakość powietrza",
+                message: $"🌋 jest tragiczna",
                 data: new { tag = "AirQualityNotification" });
         }
 
-        else if (Pm25 >= 10 && Pm25 < 15 || Pm10 >= 25 && Pm10 < 35)
+        else if (Pm25 >= 12 && Pm25 < 15 || Pm10 >= 25 && Pm10 < 35)
         {
             services.Notify.MobileAppSmG996b
                 ("TTS", data: new { tts_text = "Unikaj spacerów, podwyższone stężenie pyłów zawieszonych!" });
             services.Notify.MobileAppSmG996b
-                (title: "Jakość powietrza", message: $"💨 podwyższone stężenie pyłów zawieszonych!", 
+                (title: "Jakość powietrza", message: $"💨 podwyższone stężenie pyłów zawieszonych!",
                 data: new { tag = "AirQualityNotification" });
         }
         else
         {
             services.Notify.MobileAppSmG996b
-                (title: "Jakość powietrza", 
-                message: $"💨 podwyższone stężenie pyłów zawieszonych!", 
+                (title: "Jakość powietrza",
+                message: $"🌞 jest w porządku!",
                 data: new { tag = "AirQualityNotification" });
         }
     }
@@ -115,28 +109,5 @@ public class TempAndHumidity
             .StateChanges()
             .Where(e => outdoorTemperature.AsNumeric().State <= 25.0)
             .Subscribe(_ => services.Switch.TurnOn(ServiceTarget.FromEntities("switch.outdoormcuinternalled", "switch.outdoormcuinternalled")));
-    }
-
-    private void downTemp(Entities entities, Services services)
-    {
-        NumericSensorEntity outdoorTemperature = entities.Sensor.Outdoortemp;
-        outdoorTemperature
-            .StateChanges()
-            .Where(e => outdoorTemperature.AsNumeric().State > 25.0)
-            .Subscribe(_ => services.Switch.TurnOff(ServiceTarget.FromEntities("switch.outdoormcuinternalled", "switch.outdoormcuinternalled")));
-    }
-
-
-    private void LED(Entities entities, Services services)
-    {
-        if (entities.Switch.Outdoormcuinternalled.State == "on")
-        {
-            services.Notify.MobileAppSmG996b("TTS", data: new { tts_text = "TEST" });
-        }
-    }
-
-    public void InformTemp(Services services)
-    {
-        services.Switch.TurnOn(ServiceTarget.FromEntities("switch.outdoormcuinternalled", "switch.outdoormcuinternalled"));
     }
 }

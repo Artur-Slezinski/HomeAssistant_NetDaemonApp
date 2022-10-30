@@ -6,3 +6,8 @@ global using NetDaemon.AppModel;
 global using NetDaemon.HassModel;
 global using NetDaemon.Extensions.Tts;
 
+global using NetDaemon.Daemon.Fakes;
+global using Moq;
+global using Xunit;
+global using System.Threading.Tasks;
+

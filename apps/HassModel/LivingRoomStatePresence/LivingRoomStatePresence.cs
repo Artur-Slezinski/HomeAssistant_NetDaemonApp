@@ -1,11 +1,12 @@
-﻿
-namespace LivingRoomStatePresence;
+﻿namespace LivingRoomStatePresence;
 [NetDaemonApp]
 
 
 
 public class LivingRoomStatePresence
 {
+    public INetDaemonRxApp @object;
+
     public LivingRoomStatePresence(IHaContext ha, IScheduler scheduler)
     {
         var _myEntities = new Entities(ha);
@@ -15,6 +16,7 @@ public class LivingRoomStatePresence
                 
         TempRingColour(_myEntities, _services);
     }
+   
     private void TempRingColour(Entities entities, Services services)
     {
         string color = null;

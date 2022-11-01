@@ -1,4 +1,4 @@
-﻿namespace LivingRoomStatePresence;
+﻿namespace LivingRoom;
 [NetDaemonApp]
 
 public class LivingRoomStatePresence
@@ -11,9 +11,13 @@ public class LivingRoomStatePresence
         scheduler.SchedulePeriodic(TimeSpan.FromSeconds(60), () => TempRingColour(_myEntities, _services));
                 
         TempRingColour(_myEntities, _services);
+
+        _myEntities.AlarmControlPanel.Alarm
+            .StateChanges().Where(e => e.New?.State == "disarmed")
+            .Subscribe(_ => TempRingColour(_myEntities, _services));
     }
         
-    private void TempRingColour(Entities entities, Services services)
+    public void TempRingColour(Entities entities, Services services)
     {
         
         string color = null;

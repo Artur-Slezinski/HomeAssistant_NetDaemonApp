@@ -1,8 +1,4 @@
-﻿
-using LivingRoomStatePresence;
-using NotifyService;
-
-namespace Tests;
+﻿namespace Tests;
 
 public class LivingRoomStatePresenceTests : RxAppMock
 {

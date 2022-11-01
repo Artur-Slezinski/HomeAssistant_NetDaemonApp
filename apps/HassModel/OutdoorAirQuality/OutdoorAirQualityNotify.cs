@@ -2,14 +2,14 @@
 namespace NotifyService;
 [NetDaemonApp]
 
-public class AirQualityNotify
+public class OutdoorAirQualityNotify
 {
-    public AirQualityNotify(IHaContext ha, IScheduler scheduler)
+    public OutdoorAirQualityNotify(IHaContext ha, IScheduler scheduler)
     {
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);
         
-        scheduler.SchedulePeriodic(TimeSpan.FromHours(1)/*FromSeconds(10)*/, () => AirQuality(_myEntities, _services));
+        scheduler.SchedulePeriodic(TimeSpan.FromHours(1), () => AirQuality(_myEntities, _services));
 
         AirQuality(_myEntities, _services);
     }

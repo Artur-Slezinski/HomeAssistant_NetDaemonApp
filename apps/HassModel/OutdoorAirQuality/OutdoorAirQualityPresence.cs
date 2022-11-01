@@ -1,4 +1,4 @@
-﻿namespace OutdoorStatePresence;
+﻿namespace NetDaemonApps.apps.HassModel.AirQuality;
 [NetDaemonApp]
 
 public class OutdoorAirQualityPresence
@@ -31,7 +31,7 @@ public class OutdoorAirQualityPresence
         {
             color = "green";
         }
-       
+
         OutdoorAirQualityRing(entities, services, color);
     }
     private void OutdoorAirQualityRing(Entities entities, Services services, string color)

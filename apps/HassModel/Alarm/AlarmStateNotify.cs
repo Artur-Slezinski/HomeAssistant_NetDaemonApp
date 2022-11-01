@@ -1,13 +1,9 @@
-﻿
-//using HomeAssistantGenerated;
-//using Services = HomeAssistantGenerated.Services;
-
-namespace Alarm;
+﻿namespace Alarm;
 [NetDaemonApp]
 
-public class Alarm
+public class AlarmStateNotify
 {
-    public Alarm(IHaContext ha, IScheduler scheduler)
+    public AlarmStateNotify(IHaContext ha, IScheduler scheduler)
     {
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);        

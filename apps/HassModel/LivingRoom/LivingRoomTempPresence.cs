@@ -51,7 +51,8 @@ public class LivingRoomStatePresence
     private void TempRing(Entities entities, Services services, string color)
     {
         var ring = entities.Light.Led;
-        var sun = entities.Sun.Sun.State;
+        var sun = entities.Sun.Sun.State;        
+
         if (sun == "above_horizon")
         {
             ring.TurnOn(brightness: 150, colorName: color);

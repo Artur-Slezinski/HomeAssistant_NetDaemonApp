@@ -17,13 +17,13 @@ public class AlarmStateNotify
             .Subscribe(_ => WhatsAppAlarmDisarmedNotify(_services));
     }
 
-    public void WhatsAppAlarmArmedNotify(Services services)
+    private void WhatsAppAlarmArmedNotify(Services services)
     {
         services.Notify.Whatsapp
                  (message: "Alarm uzbrojony!");
     }
 
-    public void WhatsAppAlarmDisarmedNotify(Services services)
+    private void WhatsAppAlarmDisarmedNotify(Services services)
     {
         services.Notify.Whatsapp
                  (message: "Alarm rozbrojony!");

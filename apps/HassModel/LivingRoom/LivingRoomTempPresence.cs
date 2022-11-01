@@ -18,6 +18,7 @@ public class LivingRoomStatePresence
         
         string color = null;
         var temp = entities.Sensor.Outdoortemp.AsNumeric().State;
+
         if (temp <= -15)
         {
             color = "darkslateblue";

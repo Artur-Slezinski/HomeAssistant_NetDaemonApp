@@ -3,7 +3,7 @@
 
 public class LivingRoomStatePresence
 {
-    public LivingRoomStatePresence(IHaContext ha, IScheduler scheduler)
+    public  LivingRoomStatePresence(IHaContext ha, IScheduler scheduler)
     {
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);
@@ -15,13 +15,6 @@ public class LivingRoomStatePresence
         _myEntities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
             .Subscribe(_ => TempRingColour(_myEntities));
-
-        //_myEntities.AlarmControlPanel.Alarm
-        //    .StateChanges().Where(e => e.New?.State == "disarmed")
-        //    .Subscribe(_ =>
-        //    {
-        //        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(600), () => TempRingColour(_myEntities));
-        //    });
     }
 
 

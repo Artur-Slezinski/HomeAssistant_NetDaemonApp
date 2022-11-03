@@ -22,26 +22,12 @@ public class AlarmStateNotify
     private void WhatsAppAlarmArmedNotify(Services services, Entities entities)
     {
         services.Notify.Whatsapp
-        (message: "Alarm uzbrojony!");
-
-        FlashingLights(entities);
+        (message: "Alarm uzbrojony!");        
     }
 
     private void WhatsAppAlarmDisarmedNotify(Services services, Entities entities)
     {
         services.Notify.Whatsapp
                  (message: "Alarm rozbrojony!");       
-    }
-
-    private void FlashingLights(Entities entities)
-    {
-
-        while (entities.AlarmControlPanel.Alarm.State == "armed_away")
-        {
-            entities.Light.Led.TurnOn(transition: 0, colorName: "Red", brightness: 255);
-            System.Threading.Thread.Sleep(500);
-            entities.Light.Led.TurnOn(transition: 0, colorName: "Blue", brightness: 255);
-            System.Threading.Thread.Sleep(500);
-        }
     }
 }

@@ -5,14 +5,17 @@ public class OutdoorAirQualityPresence
 {
     public OutdoorAirQualityPresence(IHaContext ha, IScheduler scheduler)
     {
-        var _myEntities = new Entities(ha);
-        var _services = new Services(ha);
+        var _myEntities = new Entities(ha);        
 
-        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour(_myEntities, _services));
+        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour(_myEntities));
 
-        AirQualityRingColour(_myEntities, _services);
+        AirQualityRingColour(_myEntities);
+        System.Threading.Thread.Sleep(1000);
+        _myEntities.AlarmControlPanel.Alarm
+            .StateChanges().Where(e => e.New?.State == "disarmed")
+            .Subscribe(_ => AirQualityRingColour(_myEntities));
     }
-    private void AirQualityRingColour(Entities entities, Services services)
+    private void AirQualityRingColour(Entities entities)
     {
         var Pm25 = entities.Sensor.DomPm25.AsNumeric().State;
         var Pm10 = entities.Sensor.DomPm10.AsNumeric().State;
@@ -32,9 +35,9 @@ public class OutdoorAirQualityPresence
             color = "green";
         }
 
-        OutdoorAirQualityRing(entities, services, color);
+        OutdoorAirQualityRing(entities, color);
     }
-    private void OutdoorAirQualityRing(Entities entities, Services services, string color)
+    private void OutdoorAirQualityRing(Entities entities, string color)
     {
         var ring = entities.Light.Airqualityoutdoorledring;
         var sun = entities.Sun.Sun.State;

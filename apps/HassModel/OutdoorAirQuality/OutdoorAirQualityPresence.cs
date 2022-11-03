@@ -8,9 +8,9 @@ public class OutdoorAirQualityPresence
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);
 
-        //scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour(_myEntities, _services));
+        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour(_myEntities, _services));
 
-        //AirQualityRingColour(_myEntities, _services);
+        AirQualityRingColour(_myEntities, _services);
     }
     private void AirQualityRingColour(Entities entities, Services services)
     {
@@ -36,15 +36,15 @@ public class OutdoorAirQualityPresence
     }
     private void OutdoorAirQualityRing(Entities entities, Services services, string color)
     {
-        var ring = entities.Light.Led;
+        var ring = entities.Light.Airqualityoutdoorledring;
         var sun = entities.Sun.Sun.State;
         if (sun == "above_horizon")
         {
-            ring.TurnOn(brightness: 150, colorName: color);
+            ring.TurnOn(brightness: 255, colorName: color);
         }
         else
         {
-            ring.TurnOn(brightness: 70, colorName: color);
+            ring.TurnOn(brightness: 120, colorName: color);
         }
     }
 }

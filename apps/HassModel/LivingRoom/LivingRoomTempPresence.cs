@@ -7,19 +7,27 @@ public class LivingRoomStatePresence
     {
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);
-              
-        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(60), () => TempRingColour(_myEntities, _services));
-                
-        TempRingColour(_myEntities, _services);
+
+        var schedule = scheduler.SchedulePeriodic(TimeSpan.FromSeconds(600), () => TempRingColour(_myEntities));
+
+        TempRingColour(_myEntities);
 
         _myEntities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
-            .Subscribe(_ => TempRingColour(_myEntities, _services));
+            .Subscribe(_ => TempRingColour(_myEntities));
+
+        //_myEntities.AlarmControlPanel.Alarm
+        //    .StateChanges().Where(e => e.New?.State == "disarmed")
+        //    .Subscribe(_ =>
+        //    {
+        //        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(600), () => TempRingColour(_myEntities));
+        //    });
     }
-        
-    public void TempRingColour(Entities entities, Services services)
+
+
+    public void TempRingColour(Entities entities)
     {
-        
+
         string color = null;
         var temp = entities.Sensor.Outdoortemp.AsNumeric().State;
 
@@ -51,12 +59,12 @@ public class LivingRoomStatePresence
         {
             color = "red";
         }
-        TempRing(entities, services, color);
+        TempRing(entities, color);
     }
-    private void TempRing(Entities entities, Services services, string color)
+    private void TempRing(Entities entities, string color)
     {
         var ring = entities.Light.Led;
-        var sun = entities.Sun.Sun.State;        
+        var sun = entities.Sun.Sun.State;
 
         if (sun == "above_horizon")
         {

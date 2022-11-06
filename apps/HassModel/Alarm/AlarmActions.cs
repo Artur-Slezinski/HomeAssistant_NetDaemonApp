@@ -1,12 +1,8 @@
-﻿
-using HomeAssistantGenerated;
-using System.Configuration;
-
-namespace Alarm;
+﻿namespace Alarm;
 [NetDaemonApp]
 public class AlarmActions
 {
-    public AlarmActions(IHaContext ha, IScheduler scheduler)
+    public AlarmActions(IHaContext ha)
     {
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);
@@ -23,10 +19,10 @@ public class AlarmActions
             .StateChanges().Where(e => e.New?.State == "armed_away")
             .Subscribe(_ => FlashingLights(_myEntities));
 
-        //AlarmSound(_myEntities, _services);
+        AlarmNotification(_services);
     }
 
-    private void FlashingLights(Entities entities)
+    private static void FlashingLights(Entities entities)
     {
         var allLights = new[] {
          entities.Light.Airqualityoutdoorledring,
@@ -39,24 +35,25 @@ public class AlarmActions
             System.Threading.Thread.Sleep(500);
             allLights.TurnOn(transition: 0, colorName: "Blue", brightness: 255);
             System.Threading.Thread.Sleep(500);
-
         }
     }
-    private void AlarmSound(Entities entities)
+    private static void AlarmSound(Entities entities)
     {
-        var MBS = entities.MediaPlayer.VlcTelnet;
+        var mediaPlayer = entities.MediaPlayer.VlcTelnet;
 
         while (entities.AlarmControlPanel.Alarm.State == "armed_away")
         {
-            MBS.VolumeSet(0.2);
-            MBS.PlayMedia(mediaContentType: "music", mediaContentId: "http://192.168.2.5:8123/local/sounds/alarm.mp3");
-            System.Threading.Thread.Sleep(5000);
+            mediaPlayer.VolumeSet(0.08);
+            mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "http://192.168.2.5:8123/local/sounds/alarm.mp3");
+            System.Threading.Thread.Sleep(1000);
         }
-        MBS.MediaStop();
+        mediaPlayer.MediaStop();
+    }
+
+    private void AlarmNotification(Services services)
+    {
+        var numbers = new[] { "+48511134169", "+48726777171" };
+        //services.Notify.HuaweiLte(target: numbers, message: "Wykryto intruza!") ;
+        services.Notify.HuaweiLte(target: "+48511134169", message: "Wykryto intruza!") ;
     }
 }
-
-
-
-
-

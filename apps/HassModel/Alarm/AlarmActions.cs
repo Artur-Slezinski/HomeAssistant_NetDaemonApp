@@ -11,13 +11,13 @@ public class AlarmActions
         //    .StateChanges().Where(e => e.New?.State == "armed_away")
         //    .Subscribe(_ => AlarmSound(_myEntities), _ => FlashingLights(_myEntities));
 
-        _myEntities.AlarmControlPanel.Alarm
-            .StateChanges().Where(e => e.New?.State == "armed_away")
-            .Subscribe(_ => AlarmSound(_myEntities));
+        //_myEntities.AlarmControlPanel.Alarm
+        //    .StateChanges().Where(e => e.New?.State == "armed_away")
+        //    .Subscribe(_ => AlarmSound(_myEntities));
 
-        _myEntities.AlarmControlPanel.Alarm
-            .StateChanges().Where(e => e.New?.State == "armed_away")
-            .Subscribe(_ => FlashingLights(_myEntities));
+        //_myEntities.AlarmControlPanel.Alarm
+        //    .StateChanges().Where(e => e.New?.State == "armed_away")
+        //    .Subscribe(_ => FlashingLights(_myEntities));
 
         AlarmNotification(_services);
     }

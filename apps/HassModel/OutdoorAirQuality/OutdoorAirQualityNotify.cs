@@ -1,5 +1,4 @@
-﻿
-namespace NotifyService;
+﻿namespace NotifyService;
 [NetDaemonApp]
 
 public class OutdoorAirQualityNotify

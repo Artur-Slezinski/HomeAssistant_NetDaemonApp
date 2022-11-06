@@ -1,6 +1,4 @@
-﻿using LivingRoom;
-
-namespace Alarm;
+﻿namespace Alarm;
 [NetDaemonApp]
 
 public class AlarmStateNotify

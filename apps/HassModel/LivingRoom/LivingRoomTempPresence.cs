@@ -20,7 +20,6 @@ public class LivingRoomStatePresence
 
     public void TempRingColour(Entities entities)
     {
-
         string color = null;
         var temp = entities.Sensor.Outdoortemp.AsNumeric().State;
 
@@ -65,7 +64,7 @@ public class LivingRoomStatePresence
         }
         else
         {
-            ring.TurnOn(brightness: 70, colorName: color);
+            ring.TurnOn(brightness: 70, colorName: color);            
         }
     }
 }

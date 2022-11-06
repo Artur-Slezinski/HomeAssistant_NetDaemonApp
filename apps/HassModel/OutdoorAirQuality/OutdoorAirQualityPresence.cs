@@ -2,7 +2,7 @@
 [NetDaemonApp]
 
 public class OutdoorAirQualityPresence
-{
+{    
     public OutdoorAirQualityPresence(IHaContext ha, IScheduler scheduler)
     {
         var _myEntities = new Entities(ha);        
@@ -10,7 +10,7 @@ public class OutdoorAirQualityPresence
         scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour(_myEntities));
 
         AirQualityRingColour(_myEntities);
-        System.Threading.Thread.Sleep(1000);
+        
         _myEntities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
             .Subscribe(_ => AirQualityRingColour(_myEntities));

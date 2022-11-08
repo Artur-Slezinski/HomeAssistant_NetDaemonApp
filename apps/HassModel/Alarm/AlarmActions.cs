@@ -52,8 +52,8 @@ public class AlarmActions
 
     private void AlarmNotification(Services services)
     {
-        var numbers = new[] { "+48511134169", "+48726777171" };
-        //services.Notify.HuaweiLte(target: numbers, message: "Wykryto intruza!") ;
-        services.Notify.HuaweiLte(target: "+48511134169", message: "Wykryto intruza!") ;
+        var telNumbers = new[] { "+48xxxxxx", "+48726xxxxxx" };
+        //services.Notify.HuaweiLte(target: telNumbers, message: "Wykryto intruza!") ;
+        //services.Notify.HuaweiLte(target: "++48xxxxxx", message: "Wykryto intruza!") ;
     }
 }

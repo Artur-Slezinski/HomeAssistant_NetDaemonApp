@@ -1,61 +1,37 @@
-﻿using Microsoft.Extensions.Hosting.Internal;
-using NetDaemon.HassModel.Entities;
-using Newtonsoft.Json.Converters;
-
-namespace Miscalaneus;
-
+﻿namespace Miscalaneus;
 [NetDaemonApp]
 
 public class MorningAlarm
-{
-    string alarm ="";
+{    
+    string alarmTime ="";      
 
     public MorningAlarm(IHaContext ha, IScheduler scheduler)
     {
-        var _myEntities = new Entities(ha);
-        var _services = new Services(ha);
-        //MornigMusic(_myEntities);
-        var date = DateTime.UtcNow;
-        var isoDate = date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'+'00':'00");
-        //var isoDate = date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
+        var _entities = new Entities(ha);
+        var _scheduler = scheduler;
 
-
-        _myEntities.Sensor.SmG996bNextAlarm
+        _entities.Sensor.SmG996bNextAlarm
             .StateChanges()
-            .Subscribe(_ => MornigMusic(_myEntities));
-
-
-
+            .Subscribe(_ => MornigMusic(_entities, _scheduler));
     }
 
-    private void MornigMusic(Entities entities)
+    private void MornigMusic(Entities entities, IScheduler scheduler)
     {
         var mediaPlayer = entities.MediaPlayer.VlcTelnet;
-        var _myEntities = entities;
-        var date = DateTime.UtcNow.AddMinutes(5);
-        var isoDate = date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'+'00':'00");       
+        var alarmState = entities.Sensor.SmG996bNextAlarm.State.Remove(16, 9);        
+        var date = DateTime.UtcNow.AddMinutes(5);              
+        var isoDate = date.ToString("yyyy'-'MM'-'dd'T'HH':'mm");        
 
-        Console.WriteLine("Alarm: " + alarm);
+        Console.WriteLine("Alarm: " + alarmTime);
         Console.WriteLine("Teraz: " + isoDate);
 
-        if (alarm == isoDate)
+        if (alarmTime == isoDate)
         {
-            mediaPlayer.VolumeSet(0.08);
-            mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "http://192.168.2.5:8123/local/sounds/alarm.mp3");
-            Console.WriteLine("ALARM DZIAŁA!");
-            alarm = entities.Sensor.SmG996bNextAlarm.State;
+            mediaPlayer.VolumeSet(0.48);
+            mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "https://stream.open.fm/81");
+            scheduler.Schedule(TimeSpan.FromMinutes(15), mediaPlayer.MediaStop);
         }
-        else
-            alarm = entities.Sensor.SmG996bNextAlarm.State;
 
-        
-
-        //mediaPlayer.VolumeSet(0.08);
-        //    mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "http://192.168.2.5:8123/local/sounds/alarm.mp3");
-        //    Console.WriteLine("ALARM DZIAŁA!");
-
-
+        alarmTime = alarmState;        
     }
-
-
 }

@@ -8,7 +8,7 @@ public class OutdoorAirQualityNotify
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);
         
-        scheduler.SchedulePeriodic(TimeSpan.FromHours(1), () => AirQuality(_myEntities, _services));
+        scheduler.SchedulePeriodic(TimeSpan.FromHours(1), () => AirQuality(_myEntities, _services));        
 
         AirQuality(_myEntities, _services);
     }

@@ -58,7 +58,7 @@ public class AlarmActions
 
         while (entities.AlarmControlPanel.Alarm.State == "armed_away")
         {
-            mediaPlayer.VolumeSet(0.08);
+            mediaPlayer.VolumeSet(0.2);
             mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "http://192.168.2.5:8123/local/sounds/alarm.mp3");
             System.Threading.Thread.Sleep(1000);
         }

@@ -3,7 +3,7 @@
 
 public class LivingRoomStatePresence
 {
-    public  LivingRoomStatePresence(IHaContext ha, IScheduler scheduler)
+    public LivingRoomStatePresence(IHaContext ha, IScheduler scheduler)
     {
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);
@@ -64,7 +64,7 @@ public class LivingRoomStatePresence
         }
         else
         {
-            ring.TurnOn(brightness: 70, colorName: color);            
+            ring.TurnOn(brightness: 70, colorName: color);
         }
     }
 }

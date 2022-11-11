@@ -14,3 +14,4 @@ appsettings.json
 .vscode/launch.json
 .devcontainer/devcontainer.json
 .vscode/tasks.json
+/apps/HassModel/Alarm/SMSNotification.cs

@@ -1,4 +1,5 @@
 ﻿using HomeAssistantGenerated;
+using NetDaemonApps.apps.HassModel.Alarm;
 using System;
 using System.Reactive.Linq;
 using System.Threading;
@@ -29,7 +30,8 @@ public class AlarmActions
             Thread flashingLights = new Thread(() => FlashingLights(entities));
             flashingLights.Start();
 
-            Thread alarmNotification = new Thread(() => AlarmNotification(services));
+            SMSNotification alarm = new SMSNotification();
+            Thread alarmNotification = new Thread(() => alarm.AlarmNotification(services));
             alarmNotification.Start();
         }               
     }
@@ -47,8 +49,7 @@ public class AlarmActions
             System.Threading.Thread.Sleep(500);
             allLights.TurnOn(transition: 0, colorName: "Blue", brightness: 255);
             System.Threading.Thread.Sleep(500);
-        }
-        allLights.TurnOff();
+        }       
     }
     private static void AlarmSound(Entities entities)
     {
@@ -62,12 +63,5 @@ public class AlarmActions
             System.Threading.Thread.Sleep(1000);
         }
         mediaPlayer.MediaStop();
-    }
-
-    private void AlarmNotification(Services services)
-    {
-        var telNumbers = new[] { "+48xxxxxx", "+48726xxxxxx" };
-        //services.Notify.HuaweiLte(target: telNumbers, message: "Wykryto intruza!") ;
-        //services.Notify.HuaweiLte(target: "++48xxxxxx", message: "Wykryto intruza!") ;
-    }
+    }       
 }

@@ -22,13 +22,10 @@ public class MorningAlarm
         var date = DateTime.UtcNow.AddMinutes(5);              
         var isoDate = date.ToString("yyyy'-'MM'-'dd'T'HH':'mm");        
 
-        Console.WriteLine("Alarm: " + alarmTime);
-        Console.WriteLine("Teraz: " + isoDate);
-
         if (alarmTime == isoDate)
         {
-            mediaPlayer.VolumeSet(0.48);
-            mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "https://stream.open.fm/81");
+            mediaPlayer.VolumeSet(0.6);
+            mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "https://stream.open.fm/21");
             scheduler.Schedule(TimeSpan.FromMinutes(15), mediaPlayer.MediaStop);
         }
 

@@ -1,4 +1,9 @@
-﻿namespace Alarm;
+﻿using HomeAssistantGenerated;
+using System;
+using System.Reactive.Linq;
+using System.Threading;
+
+namespace Alarm;
 [NetDaemonApp]
 public class AlarmActions
 {
@@ -7,19 +12,26 @@ public class AlarmActions
         var _myEntities = new Entities(ha);
         var _services = new Services(ha);
 
-        //_myEntities.AlarmControlPanel.Alarm
-        //    .StateChanges().Where(e => e.New?.State == "armed_away")
-        //    .Subscribe(_ => AlarmSound(_myEntities), _ => FlashingLights(_myEntities));
+        _myEntities.BinarySensor.Hallpir
+        .StateChanges().Where(e => e.New?.State == "on")
+        .Subscribe(_ => AlarmArmed(_myEntities, _services));
+    }
 
-        //_myEntities.AlarmControlPanel.Alarm
-        //    .StateChanges().Where(e => e.New?.State == "armed_away")
-        //    .Subscribe(_ => AlarmSound(_myEntities));
+    private void AlarmArmed(Entities entities, Services services)
+    {
+        var hallPirSensor = entities.BinarySensor.Hallpir;
 
-        //_myEntities.AlarmControlPanel.Alarm
-        //    .StateChanges().Where(e => e.New?.State == "armed_away")
-        //    .Subscribe(_ => FlashingLights(_myEntities));
+        if (entities.AlarmControlPanel.Alarm.State == "armed_away")
+        {
+            Thread alarmSound = new Thread(() => AlarmSound(entities));
+            alarmSound.Start();
 
-        AlarmNotification(_services);
+            Thread flashingLights = new Thread(() => FlashingLights(entities));
+            flashingLights.Start();
+
+            Thread alarmNotification = new Thread(() => AlarmNotification(services));
+            alarmNotification.Start();
+        }               
     }
 
     private static void FlashingLights(Entities entities)
@@ -36,9 +48,11 @@ public class AlarmActions
             allLights.TurnOn(transition: 0, colorName: "Blue", brightness: 255);
             System.Threading.Thread.Sleep(500);
         }
+        allLights.TurnOff();
     }
     private static void AlarmSound(Entities entities)
     {
+
         var mediaPlayer = entities.MediaPlayer.VlcTelnet;
 
         while (entities.AlarmControlPanel.Alarm.State == "armed_away")

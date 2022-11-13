@@ -1,10 +1,4 @@
-﻿using HomeAssistantGenerated;
-using NetDaemonApps.apps.HassModel.Alarm;
-using System;
-using System.Reactive.Linq;
-using System.Threading;
-
-namespace Alarm;
+﻿namespace Alarm;
 [NetDaemonApp]
 public class AlarmActions
 {

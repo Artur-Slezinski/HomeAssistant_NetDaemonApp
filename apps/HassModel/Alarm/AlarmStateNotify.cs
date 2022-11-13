@@ -44,16 +44,14 @@ public class AlarmStateNotify
     private void TtsAlarmArmedNotify(Entities entities, ITextToSpeechService tts)
     {
         var mediaPlayer = entities.MediaPlayer.VlcTelnet;
-        mediaPlayer.VolumeSet(0.3);
-        mediaPlayer.VolumeSet(0);
+        mediaPlayer.VolumeSet(0.3);       
         tts.Speak("media_player.vlc_telnet", "Alarm uzbrojony!", "google_say", "pl");
     }
 
     private void TtsAlarmDisarmedNotify(Entities entities, ITextToSpeechService tts)
     {
         var mediaPlayer = entities.MediaPlayer.VlcTelnet;
-        mediaPlayer.VolumeSet(0.3);
-        mediaPlayer.VolumeSet(0);
+        mediaPlayer.VolumeSet(0.3);       
         tts.Speak("media_player.vlc_telnet", "Alarm rozbrojony!", "google_say", "pl");
     }
 }

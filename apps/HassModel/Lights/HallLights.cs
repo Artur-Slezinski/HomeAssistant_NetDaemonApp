@@ -16,32 +16,28 @@ public class HallLights
         motion
             .StateChanges().Where(e => e.New?.State == "off")
             .Delay(TimeSpan.FromSeconds(10))
-            .Subscribe(_ => TurnOffFromBathroom(_entities));
+            .Subscribe(_ => TurnOff(_entities));
     }
 
     private static void TurnOnFromBathroom(Entities entities)
     {
         var light = entities.Light.Hallled;
-        if ((light.State == "on" && (light.Attributes.Effect == "Wipe up off" || light.Attributes.Effect == "Wipe down off")) || light.State == "off")
-        {
-            light.TurnOn(colorName: "Magenta", effect: "Wipe up on", brightness: 80);
-        }
+        light.TurnOn(colorName: "Magenta", effect: "Wipe up on", brightness: 80);
+
     }
+
     private static void TurnOnFromBedroom(Entities entities)
     {
         var light = entities.Light.Hallled;
-        if ((light.State == "on" && (light.Attributes.Effect == "Wipe up off" || light.Attributes.Effect == "Wipe down off")) || light.State == "off")
-        {
-            light.TurnOn(colorName: "Magenta", effect: "Wipe down on", brightness: 80);
-        }
+
+        light.TurnOn(colorName: "Magenta", effect: "Wipe down on", brightness: 80);
+
     }
 
-    private static void TurnOffFromBathroom(Entities entities)
+    private static void TurnOff(Entities entities)
     {
         var light = entities.Light.Hallled;
         string motion = entities.BinarySensor.Hallpir.State;
-
-        string mot = entities.BinarySensor.Hallpir.State;
 
         if (motion == "off" && light.State == "on" && light.Attributes.Effect == "Wipe up on")
         {

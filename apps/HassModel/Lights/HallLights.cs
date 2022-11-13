@@ -1,4 +1,6 @@
-﻿namespace Lights;
+﻿using System.Threading;
+
+namespace Lights;
 [NetDaemonApp]
 
 public class HallLights
@@ -13,10 +15,11 @@ public class HallLights
 
         _entities.BinarySensor.Hallpir
             .StateChanges().Where(e => e.New?.State == "off")
+            .Delay(TimeSpan.FromSeconds(10))
             .Subscribe(_ => TurnOffFromBathroom(_entities));
     }
 
-    private void TurnOnFromBathroom(Entities entities)
+    private static void TurnOnFromBathroom(Entities entities)
     {
         var light = entities.Light.Hallled;
         if (light.State == "on" && light.Attributes.Effect == "Wipe up off")
@@ -25,11 +28,11 @@ public class HallLights
         }
     }
 
-    private void TurnOffFromBathroom(Entities entities)
+    private static void TurnOffFromBathroom(Entities entities)
     {
         var light = entities.Light.Hallled;
         if (light.State == "on" && light.Attributes.Effect == "Wipe up on")
-        {
+        {            
             light.TurnOn(effect: "Wipe up off");
         }
     }

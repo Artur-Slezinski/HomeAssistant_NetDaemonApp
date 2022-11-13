@@ -40,9 +40,9 @@ public class AlarmActions
         while (entities.AlarmControlPanel.Alarm.State == "armed_away")
         {
             allLights.TurnOn(transition: 0, colorName: "Gold", brightness: 255);
-            System.Threading.Thread.Sleep(500);
+            Thread.Sleep(500);
             allLights.TurnOn(transition: 0, colorName: "Blue", brightness: 255);
-            System.Threading.Thread.Sleep(500);
+            Thread.Sleep(500);
         }       
     }
     private static void AlarmSound(Entities entities)
@@ -54,7 +54,7 @@ public class AlarmActions
         {
             mediaPlayer.VolumeSet(0.2);
             mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "http://192.168.2.5:8123/local/sounds/alarm.mp3");
-            System.Threading.Thread.Sleep(1000);
+            Thread.Sleep(1000);
         }
         mediaPlayer.MediaStop();
     }       

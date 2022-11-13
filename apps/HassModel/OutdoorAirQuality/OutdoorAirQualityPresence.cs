@@ -1,4 +1,4 @@
-﻿namespace NetDaemonApps.apps.HassModel.AirQuality;
+﻿namespace AirQuality;
 [NetDaemonApp]
 
 public class OutdoorAirQualityPresence

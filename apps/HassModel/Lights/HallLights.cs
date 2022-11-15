@@ -10,8 +10,7 @@ public class HallLights
             {_entities.BinarySensor.Hallpir};
 
         _entities.BinarySensor.Hallpir
-            .StateChanges().Where(e => e.New?.State == "on")
-            .Subscribe(_ => TurnOnFromBathroom(_entities));
+            .WhenTurnsOn(_ => TurnOnFromBathroom(_entities));        
 
         motion
             .StateChanges().Where(e => e.New?.State == "off")

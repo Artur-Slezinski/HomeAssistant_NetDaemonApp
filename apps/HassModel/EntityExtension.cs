@@ -20,7 +20,4 @@ namespace NetDaemon.HassModel.Entities
             where T : Entity<T, EntityState<TAttributes>, TAttributes>
             => entity.StateChanges().Where(c => (c.Old?.IsOn() ?? false) && (c.New?.IsOff() ?? false)).Subscribe(observer);
     }
-
-
-
 }

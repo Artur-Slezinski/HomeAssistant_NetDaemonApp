@@ -2,60 +2,69 @@
 [NetDaemonApp]
 public class AlarmActions
 {
+    private readonly Entities _entities;
+    private readonly Services _services;
     public AlarmActions(IHaContext ha)
     {
-        var _myEntities = new Entities(ha);
-        var _services = new Services(ha);
+        _entities = new Entities(ha);
+        _services = new Services(ha);
 
-        _myEntities.BinarySensor.Hallpir
+        _entities.BinarySensor.Hallpir
         .StateChanges().Where(e => e.New?.State == "on")
-        .Subscribe(_ => AlarmArmed(_myEntities, _services));
+        .Subscribe(_ => AlarmArmed());
     }
 
-    private void AlarmArmed(Entities entities, Services services)
+    private void AlarmArmed()
     {
-        var hallPirSensor = entities.BinarySensor.Hallpir;
+        var hallPirSensor = _entities.BinarySensor.Hallpir;
 
-        if (entities.AlarmControlPanel.Alarm.State == "armed_away")
+        if (_entities.AlarmControlPanel.Alarm.State == "armed_away")
         {
-            Thread alarmSound = new Thread(() => AlarmSound(entities));
+            Thread alarmSound = new Thread(() => AlarmSound());
             alarmSound.Start();
 
-            Thread flashingLights = new Thread(() => FlashingLights(entities));
+            Thread flashingLights = new Thread(() => FlashingLights());
             flashingLights.Start();
-
-            SMSNotification alarm = new SMSNotification();
-            Thread alarmNotification = new Thread(() => alarm.AlarmNotification(services));
+            
+            Thread alarmNotification = new Thread(() => AlarmNotification());
             alarmNotification.Start();
-        }               
+        }
     }
 
-    private static void FlashingLights(Entities entities)
+    private void FlashingLights()
     {
         var allLights = new[] {
-         entities.Light.Airqualityoutdoorledring,
-         entities.Light.Led
+         _entities.Light.Airqualityoutdoorledring,
+         _entities.Light.Led
         };
 
-        while (entities.AlarmControlPanel.Alarm.State == "armed_away")
+        while (_entities.AlarmControlPanel.Alarm.State == "armed_away")
         {
             allLights.TurnOn(transition: 0, colorName: "Gold", brightness: 255);
             Thread.Sleep(500);
             allLights.TurnOn(transition: 0, colorName: "Blue", brightness: 255);
             Thread.Sleep(500);
-        }       
+        }
     }
-    private static void AlarmSound(Entities entities)
+    private void AlarmSound()
     {
 
-        var mediaPlayer = entities.MediaPlayer.VlcTelnet;
+        var mediaPlayer = _entities.MediaPlayer.VlcTelnet;
 
-        while (entities.AlarmControlPanel.Alarm.State == "armed_away")
+        while (_entities.AlarmControlPanel.Alarm.State == "armed_away")
         {
             mediaPlayer.VolumeSet(0.2);
             mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "http://192.168.2.5:8123/local/sounds/alarm.mp3");
             Thread.Sleep(1000);
         }
         mediaPlayer.MediaStop();
-    }       
+    }
+
+    public void AlarmNotification()
+    {
+        var numbers = SMSNotification.telNumbers;        
+        //_services.Notify.HuaweiLte(target: numbers, message: "Wykryto intruza!") ;
+        //_services.Notify.HuaweiLte(target: "++48xxxxxx", message: "Wykryto intruza!") ;
+    }
+
 }

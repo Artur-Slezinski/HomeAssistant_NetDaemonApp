@@ -14,6 +14,5 @@ global using NetDaemon.HassModel.Entities;
 global using NetDaemon.HassModel.Extensions;
 global using HomeAssistantGenerated;
 global using System.Reactive.Concurrency;
-global using NetDaemonApps.apps.HassModel.Alarm;
 global using System.Threading;
 

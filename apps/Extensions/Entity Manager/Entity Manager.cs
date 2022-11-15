@@ -6,7 +6,6 @@ namespace Entity_Manager;
 
 public class Entity_Manager
 {
-
     private readonly IMqttEntityManager _entityManager;
     public Entity_Manager(IMqttEntityManager entityManager, IHaContext ha)
     {
@@ -19,13 +18,11 @@ public class Entity_Manager
 
         var entityId = "sensor.oledDistance";
 
-        SetStateAsync(entityId);
-        //SetStateAsync(entityId, state);
+        CreateAsync(entityId);
 
     }
-    async Task SetStateAsync(string entityId, EntityCreationOptions? options = null, object? additionalConfig = null)
+    async Task CreateAsync(string entityId, EntityCreationOptions? options = null, object? additionalConfig = null)
     {
-        //Entity_Manager.SetStateAsync(entityId); return Task.CompletedTask;
         await _entityManager.CreateAsync(entityId)
             .ConfigureAwait(false);
     }
@@ -39,9 +36,10 @@ public class Entity_Manager
         var entityId = "sensor.oledDistance";
 
 
-        if (entities.Sensor.Weatherdisplaydistance.State >= 0 && entities.Sensor.Weatherdisplaydistance.State <= 2)
+        if (entities.Sensor.Weatherdisplaydistance.State >= 0 && entities.Sensor.Weatherdisplaydistance.State <= 0.4)
         {
             SetStateAsync(entityId, "1");
+
         }
         else
         {

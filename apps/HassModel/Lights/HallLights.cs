@@ -3,40 +3,42 @@
 
 public class HallLights
 {
+    private readonly Entities _entities;
+
     public HallLights(IHaContext ha)
     {
-        var _entities = new Entities(ha);
+        _entities = new Entities(ha);
         var motion = new[]
             {_entities.BinarySensor.Hallpir};
 
         _entities.BinarySensor.Hallpir
-            .WhenTurnsOn(_ => TurnOnFromBathroom(_entities));        
+            .WhenTurnsOn(_ => TurnOnFromBathroom());
 
         motion
             .StateChanges().Where(e => e.New?.State == "off")
             .Delay(TimeSpan.FromSeconds(10))
-            .Subscribe(_ => TurnOff(_entities));
+            .Subscribe(_ => TurnOff());
     }
 
-    private static void TurnOnFromBathroom(Entities entities)
+    private void TurnOnFromBathroom()
     {
-        var light = entities.Light.Hallled;
+        var light = _entities.Light.Hallled;
         light.TurnOn(colorName: "Magenta", effect: "Wipe up on", brightness: 80);
 
     }
 
-    private static void TurnOnFromBedroom(Entities entities)
+    private void TurnOnFromBedroom()
     {
-        var light = entities.Light.Hallled;
+        var light = _entities.Light.Hallled;
 
         light.TurnOn(colorName: "Magenta", effect: "Wipe down on", brightness: 80);
 
     }
 
-    private static void TurnOff(Entities entities)
+    private void TurnOff()
     {
-        var light = entities.Light.Hallled;
-        string motion = entities.BinarySensor.Hallpir.State;
+        var light = _entities.Light.Hallled;
+        string motion = _entities.BinarySensor.Hallpir.State;
 
         if (motion == "off" && light.State == "on" && light.Attributes.Effect == "Wipe up on")
         {

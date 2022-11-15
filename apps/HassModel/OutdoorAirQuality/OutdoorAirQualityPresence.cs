@@ -2,25 +2,27 @@
 [NetDaemonApp]
 
 public class OutdoorAirQualityPresence
-{    
+{
+    private readonly Entities _entities;
+    
     public OutdoorAirQualityPresence(IHaContext ha, IScheduler scheduler)
     {
         
-        var _myEntities = new Entities(ha);        
+        _entities = new Entities(ha);        
 
-        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour(_myEntities));
+        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour());
 
-        AirQualityRingColour(_myEntities);
+        AirQualityRingColour();
         
-        _myEntities.AlarmControlPanel.Alarm
+        _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
-            .Subscribe(_ => AirQualityRingColour(_myEntities));
+            .Subscribe(_ => AirQualityRingColour());
     }
-    private void AirQualityRingColour(Entities entities)
+    private void AirQualityRingColour()
     {
 
-        var Pm25 = entities.Sensor.DomPm25.AsNumeric().State;
-        var Pm10 = entities.Sensor.DomPm10.AsNumeric().State;
+        var Pm25 = _entities.Sensor.DomPm25.AsNumeric().State;
+        var Pm10 = _entities.Sensor.DomPm10.AsNumeric().State;
         string color = null;
 
         if (Pm25 >= 15 || Pm10 >= 35)
@@ -37,12 +39,12 @@ public class OutdoorAirQualityPresence
             color = "green";
         }
 
-        OutdoorAirQualityRing(entities, color);
+        OutdoorAirQualityRing(color);
     }
-    private void OutdoorAirQualityRing(Entities entities, string color)
+    private void OutdoorAirQualityRing(string color)
     {
-        var ring = entities.Light.Airqualityoutdoorledring;
-        var sun = entities.Sun.Sun.State;
+        var ring = _entities.Light.Airqualityoutdoorledring;
+        var sun = _entities.Sun.Sun.State;
         if (sun == "above_horizon")
         {
             ring.TurnOn(brightness: 255, colorName: color);

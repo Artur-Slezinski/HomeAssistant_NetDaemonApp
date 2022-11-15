@@ -3,25 +3,26 @@
 
 public class LivingRoomStatePresence
 {
+    private readonly Entities _entities;
+
     public LivingRoomStatePresence(IHaContext ha, IScheduler scheduler)
     {
-        var _myEntities = new Entities(ha);
-        var _services = new Services(ha);
+        _entities = new Entities(ha);
 
-        var schedule = scheduler.SchedulePeriodic(TimeSpan.FromSeconds(600), () => TempRingColour(_myEntities));
+        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(120), () => TempRingColour());
 
-        TempRingColour(_myEntities);
+        TempRingColour();
 
-        _myEntities.AlarmControlPanel.Alarm
+        _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
-            .Subscribe(_ => TempRingColour(_myEntities));
+            .Subscribe(_ => TempRingColour());
     }
 
 
-    public void TempRingColour(Entities entities)
+    public void TempRingColour()
     {
         string color = null;
-        var temp = entities.Sensor.Outdoortemp.AsNumeric().State;
+        var temp = _entities.Sensor.Outdoortemp.AsNumeric().State;
 
         if (temp <= -15)
         {
@@ -51,12 +52,12 @@ public class LivingRoomStatePresence
         {
             color = "red";
         }
-        TempRing(entities, color);
+        TempRing(color);
     }
-    private void TempRing(Entities entities, string color)
+    private void TempRing(string color)
     {
-        var ring = entities.Light.Led;
-        var sun = entities.Sun.Sun.State;
+        var ring = _entities.Light.Led;
+        var sun = _entities.Sun.Sun.State;
 
         if (sun == "above_horizon")
         {

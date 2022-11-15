@@ -3,55 +3,56 @@
 
 public class AlarmStateNotify
 {
+    private readonly Entities _entities;
+    private readonly Services _services;
+    private readonly ITextToSpeechService _tts;
+
     public AlarmStateNotify(IHaContext ha, ITextToSpeechService tts)
     {
-        var _myEntities = new Entities(ha);
-        var _services = new Services(ha);
+        _entities = new Entities(ha);
+        _services = new Services(ha);
+        _tts = tts;
 
-        _myEntities.AlarmControlPanel.Alarm
+        _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "armed_away")
-            .Subscribe(_ => AlarmArmed(_myEntities, _services, tts));
+            .Subscribe(_ =>
+            {
+                TtsAlarmArmedNotify();
+                WhatsAppAlarmArmedNotify();
+            });
 
-        _myEntities.AlarmControlPanel.Alarm
+        _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
-            .Subscribe(_ => AlarmDisarmed(_myEntities, _services, tts));
+            .Subscribe(_ =>
+            {
+                TtsAlarmDisarmedNotify();
+                WhatsAppAlarmDisarmedNotify();
+            });
     }
 
-    private void AlarmArmed(Entities entities, Services services, ITextToSpeechService tts)
+    private void WhatsAppAlarmArmedNotify()
     {
-        TtsAlarmArmedNotify(entities, tts);
-        WhatsAppAlarmArmedNotify(services, entities);
-    }
-
-    private void AlarmDisarmed(Entities entities, Services services, ITextToSpeechService tts)
-    {
-        TtsAlarmDisarmedNotify(entities, tts);
-        WhatsAppAlarmDisarmedNotify(services, entities);
-    }
-
-    private void WhatsAppAlarmArmedNotify(Services services, Entities entities)
-    {
-        services.Notify.Whatsapp
+        _services.Notify.Whatsapp
             (message: "Alarm uzbrojony!");
     }
 
-    private void WhatsAppAlarmDisarmedNotify(Services services, Entities entities)
+    private void WhatsAppAlarmDisarmedNotify()
     {
-        services.Notify.Whatsapp
+        _services.Notify.Whatsapp
             (message: "Alarm rozbrojony!");
     }
 
-    private void TtsAlarmArmedNotify(Entities entities, ITextToSpeechService tts)
+    private void TtsAlarmArmedNotify()
     {
-        var mediaPlayer = entities.MediaPlayer.VlcTelnet;
-        mediaPlayer.VolumeSet(0.3);       
-        tts.Speak("media_player.vlc_telnet", "Alarm uzbrojony!", "google_say", "pl");
+        var mediaPlayer = _entities.MediaPlayer.VlcTelnet;
+        mediaPlayer.VolumeSet(0.3);
+        _tts.Speak("media_player.vlc_telnet", "Alarm uzbrojony!", "google_say", "pl");
     }
 
-    private void TtsAlarmDisarmedNotify(Entities entities, ITextToSpeechService tts)
+    private void TtsAlarmDisarmedNotify()
     {
-        var mediaPlayer = entities.MediaPlayer.VlcTelnet;
-        mediaPlayer.VolumeSet(0.3);       
-        tts.Speak("media_player.vlc_telnet", "Alarm rozbrojony!", "google_say", "pl");
+        var mediaPlayer = _entities.MediaPlayer.VlcTelnet;
+        mediaPlayer.VolumeSet(0.3);
+        _tts.Speak("media_player.vlc_telnet", "Alarm rozbrojony!", "google_say", "pl");
     }
 }

@@ -5,6 +5,7 @@ public class OutdoorAirQualityPresence
 {    
     public OutdoorAirQualityPresence(IHaContext ha, IScheduler scheduler)
     {
+        
         var _myEntities = new Entities(ha);        
 
         scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour(_myEntities));
@@ -17,6 +18,7 @@ public class OutdoorAirQualityPresence
     }
     private void AirQualityRingColour(Entities entities)
     {
+
         var Pm25 = entities.Sensor.DomPm25.AsNumeric().State;
         var Pm10 = entities.Sensor.DomPm10.AsNumeric().State;
         string color = null;

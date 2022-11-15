@@ -5,6 +5,7 @@ public class LivingRoomStatePresence
 {
     private readonly Entities _entities;
 
+   
     public LivingRoomStatePresence(IHaContext ha, IScheduler scheduler)
     {
         _entities = new Entities(ha);
@@ -18,6 +19,10 @@ public class LivingRoomStatePresence
             .Subscribe(_ => TempRingColour());
     }
 
+    public LivingRoomStatePresence() : base()
+    {
+
+    }
 
     public void TempRingColour()
     {

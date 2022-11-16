@@ -1,28 +1,29 @@
-﻿namespace LivingRoom;
+﻿using HomeAssistantGenerated;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Reactive.Concurrency;
+
+namespace LivingRoom;
 [NetDaemonApp]
 
 public class LivingRoomStatePresence
 {
     private readonly Entities _entities;
+    private readonly IScheduler _scheduler;
 
    
     public LivingRoomStatePresence(IHaContext ha, IScheduler scheduler)
     {
         _entities = new Entities(ha);
+        _scheduler = scheduler;
 
-        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(120), () => TempRingColour());
+        _scheduler.SchedulePeriodic(TimeSpan.FromSeconds(120), () => TempRingColour());
 
         TempRingColour();
 
         _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
             .Subscribe(_ => TempRingColour());
-    }
-
-    public LivingRoomStatePresence() : base()
-    {
-
-    }
+    }  
 
     public void TempRingColour()
     {

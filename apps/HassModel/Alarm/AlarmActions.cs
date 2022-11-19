@@ -9,15 +9,22 @@ public class AlarmActions
         _entities = new Entities(ha);
         _services = new Services(ha);
 
-        _entities.BinarySensor.Hallpir
+        Initialize();        
+    }
+
+    private void Initialize()
+    {
+        var motion = new[]
+            {_entities.BinarySensor.Hallbathroompir,
+             _entities.BinarySensor.Hallbedroompir};
+
+        motion
         .StateChanges().Where(e => e.New?.State == "on")
         .Subscribe(_ => AlarmArmed());
     }
 
     private void AlarmArmed()
-    {
-        var hallPirSensor = _entities.BinarySensor.Hallpir;
-
+    {       
         if (_entities.AlarmControlPanel.Alarm.State == "armed_away")
         {
             Thread alarmSound = new Thread(() => AlarmSound());

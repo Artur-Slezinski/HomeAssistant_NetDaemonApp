@@ -1,19 +1,25 @@
-﻿namespace AirQuality;
+﻿using System.Reactive.Concurrency;
+
+namespace AirQuality;
 [NetDaemonApp]
 
 public class OutdoorAirQualityPresence
 {
     private readonly Entities _entities;
-    
+    private readonly IScheduler _scheduler;
     public OutdoorAirQualityPresence(IHaContext ha, IScheduler scheduler)
-    {
-        
+    {        
         _entities = new Entities(ha);        
-
-        scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour());
+        _scheduler= scheduler;
+        
+        Initialize();
+    }
+    private void Initialize() 
+    {
+        _scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour());
 
         AirQualityRingColour();
-        
+
         _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
             .Subscribe(_ => AirQualityRingColour());

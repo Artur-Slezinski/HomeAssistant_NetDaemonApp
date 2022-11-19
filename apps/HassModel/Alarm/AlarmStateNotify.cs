@@ -13,6 +13,11 @@ public class AlarmStateNotify
         _services = new Services(ha);
         _tts = tts;
 
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "armed_away")
             .Subscribe(_ =>

@@ -1,17 +1,27 @@
-﻿namespace NotifyService;
+﻿using System.Reactive.Concurrency;
+
+namespace NotifyService;
 [NetDaemonApp]
 public class OutdoorAirQualityNotify
 {
     private readonly Entities _entities;
     private readonly Services _services;
+    private readonly IScheduler _scheduler;
+
     public OutdoorAirQualityNotify(IHaContext ha, IScheduler scheduler)
     {
         _entities = new Entities(ha);
         _services = new Services(ha);
+        _scheduler = scheduler;
 
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         AirQuality();
 
-        scheduler.SchedulePeriodic(TimeSpan.FromHours(1), () => AirQuality());
+        _scheduler.SchedulePeriodic(TimeSpan.FromHours(1), () => AirQuality());
     }
 
     private void AirQuality()

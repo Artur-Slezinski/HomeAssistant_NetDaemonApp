@@ -13,6 +13,11 @@ public class MorningAlarm
         _entities = new Entities(ha);
         _scheduler = scheduler;
 
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         _entities.Sensor.SmG996bNextAlarm
             .StateChanges()
             .Subscribe(_ => MornigMusic());

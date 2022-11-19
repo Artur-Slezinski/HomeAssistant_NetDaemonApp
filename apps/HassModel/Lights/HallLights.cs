@@ -1,4 +1,6 @@
-﻿namespace Lights;
+﻿using NetDaemon.HassModel.Entities;
+
+namespace Lights;
 [NetDaemonApp]
 
 public class HallLights
@@ -8,11 +10,20 @@ public class HallLights
     public HallLights(IHaContext ha)
     {
         _entities = new Entities(ha);
-        var motion = new[]
-            {_entities.BinarySensor.Hallpir};
 
-        _entities.BinarySensor.Hallpir
+        Initialize();        
+    }
+
+    private void Initialize()
+    {
+        var motion = new[]
+            {_entities.BinarySensor.Hallbathroompir,
+             _entities.BinarySensor.Hallbedroompir};
+
+        _entities.BinarySensor.Hallbathroompir
             .WhenTurnsOn(_ => TurnOnFromBathroom());
+        _entities.BinarySensor.Hallbedroompir
+            .WhenTurnsOn(_ => TurnOnFromBedroom());
 
         motion
             .StateChanges().Where(e => e.New?.State == "off")
@@ -24,27 +35,30 @@ public class HallLights
     {
         var light = _entities.Light.Hallled;
         light.TurnOn(colorName: "Magenta", effect: "Wipe up on", brightness: 80);
-
+        
     }
 
     private void TurnOnFromBedroom()
     {
         var light = _entities.Light.Hallled;
-
         light.TurnOn(colorName: "Magenta", effect: "Wipe down on", brightness: 80);
 
     }
 
     private void TurnOff()
-    {
+    {        
         var light = _entities.Light.Hallled;
-        string motion = _entities.BinarySensor.Hallpir.State;
+       
+        var motion = new[]
+            {_entities.BinarySensor.Hallbathroompir.State,
+             _entities.BinarySensor.Hallbedroompir.State};    
 
-        if (motion == "off" && light.State == "on" && light.Attributes.Effect == "Wipe up on")
+        if (motion[0] == "off" && motion[1] == "off" && light.Attributes.Effect == "Wipe up on") 
         {
+            
             light.TurnOn(effect: "Wipe up off");
         }
-        else if (motion == "off" && light.State == "on" && light.Attributes.Effect == "Wipe down on")
+        else if (motion[0] == "off" && motion[1] == "off" && light.Attributes.Effect == "Wipe down on") 
         {
             light.TurnOn(effect: "Wipe down off");
         }

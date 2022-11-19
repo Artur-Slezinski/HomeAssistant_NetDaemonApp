@@ -9,13 +9,17 @@ public class LivingRoomStatePresence
 {
     private readonly Entities _entities;
     private readonly IScheduler _scheduler;
-
    
     public LivingRoomStatePresence(IHaContext ha, IScheduler scheduler)
     {
         _entities = new Entities(ha);
         _scheduler = scheduler;
 
+        Initialize();
+    }  
+
+    private void Initialize()
+    {
         _scheduler.SchedulePeriodic(TimeSpan.FromSeconds(120), () => TempRingColour());
 
         TempRingColour();
@@ -23,7 +27,7 @@ public class LivingRoomStatePresence
         _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
             .Subscribe(_ => TempRingColour());
-    }  
+    }
 
     public void TempRingColour()
     {

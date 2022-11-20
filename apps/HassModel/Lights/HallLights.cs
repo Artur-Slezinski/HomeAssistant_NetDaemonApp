@@ -47,7 +47,7 @@ public class HallLights
         if (alarmState == "disarmed")
         {
             var light = _entities.Light.Hallled;
-            light.TurnOn(colorName: "Magenta", effect: "Wipe up on", brightness: 80);
+            light.TurnOn(colorName: "magenta", effect: "Wipe up on", brightness: 80);
         }
     }
 
@@ -58,7 +58,7 @@ public class HallLights
         if (alarmState == "disarmed")
         {
             var light = _entities.Light.Hallled;
-            light.TurnOn(colorName: "Magenta", effect: "Wipe down on", brightness: 80);
+            light.TurnOn(colorName: "sandybrown", effect: "Wipe down on", brightness: 80);
         }
     }
 

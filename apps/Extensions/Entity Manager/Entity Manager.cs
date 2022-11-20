@@ -1,26 +1,33 @@
 ﻿using NetDaemon.Extensions.MqttEntityManager;
-using NetDaemon.Extensions.MqttEntityManager.Models;
 
 namespace Entity_Manager;
 [NetDaemonApp]
 
 public class Entity_Manager
 {
+    private readonly Entities _entities;
     private readonly IMqttEntityManager _entityManager;
+
     public Entity_Manager(IMqttEntityManager entityManager, IHaContext ha)
     {
         _entityManager = entityManager;
-        var _entities = new Entities(ha);
+        _entities = new Entities(ha);
 
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         _entities.Sensor.Weatherdisplaydistance
             .StateAllChanges()
-            .Subscribe(_ => OledState(entityManager, _entities));
+            .Delay(TimeSpan.FromSeconds(2))
+            .Subscribe(_ => OledState());
 
         var entityId = "sensor.oledDistance";
 
         CreateAsync(entityId);
-
     }
+
     async Task CreateAsync(string entityId, EntityCreationOptions? options = null, object? additionalConfig = null)
     {
         await _entityManager.CreateAsync(entityId)
@@ -31,15 +38,23 @@ public class Entity_Manager
         await _entityManager.SetStateAsync(entityId, state)
             .ConfigureAwait(false);
     }
-    private void OledState(IMqttEntityManager entityManager, Entities entities)
+
+    private void OledState()
     {
         var entityId = "sensor.oledDistance";
+        var distance = _entities.Sensor.Weatherdisplaydistance.State;
+        var sunPosition = _entities.Sun.Sun.State;
 
-
-        if (entities.Sensor.Weatherdisplaydistance.State >= 0 && entities.Sensor.Weatherdisplaydistance.State <= 0.4)
+        if (distance >= 0 && distance <= 0.8)
         {
-            SetStateAsync(entityId, "1");
-
+            if (sunPosition == "above_horizon")
+            {
+                SetStateAsync(entityId, "1");
+            }
+            else
+            {
+                SetStateAsync(entityId, "0.2");
+            }
         }
         else
         {

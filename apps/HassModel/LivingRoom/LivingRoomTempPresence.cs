@@ -26,6 +26,7 @@ public class LivingRoomStatePresence
 
         _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
+            .Delay(TimeSpan.FromSeconds(1))
             .Subscribe(_ => TempRingColour());
     }
 

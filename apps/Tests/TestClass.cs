@@ -54,7 +54,7 @@ public class FakeMockableAppImplementation
         _app.Entities(n => n.EntityId!.EndsWith("entities", StringComparison.InvariantCultureIgnoreCase)).StateChanges.Where(s => s.New.State == "off").Subscribe(_ => _app.Entity("light.kitchen").TurnOff());
 
         _app.Entity("sensor.temperature")
-            .StateAllChanges            
+            .StateAllChanges
             .Where(e => e.New?.State < 15)
             .Subscribe(_ => _app.CallService("notify", "notify", new { title = "Hello from Home Assistant" }));
 

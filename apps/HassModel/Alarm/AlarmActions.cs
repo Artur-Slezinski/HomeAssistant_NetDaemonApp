@@ -42,7 +42,8 @@ public class AlarmActions
     {
         var allLights = new[] {
          _entities.Light.Airqualityoutdoorledring,
-         _entities.Light.Led
+         _entities.Light.Led,
+         _entities.Light.Hallled
         };
 
         while (_entities.AlarmControlPanel.Alarm.State == "armed_away")

@@ -16,17 +16,17 @@ public class OutdoorAirQualityPresence
     }
     private void Initialize() 
     {
-        _scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour());
-
         AirQualityRingColour();
+
+        _scheduler.SchedulePeriodic(TimeSpan.FromSeconds(30), () => AirQualityRingColour());        
 
         _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
+            .Delay(TimeSpan.FromSeconds(1))
             .Subscribe(_ => AirQualityRingColour());
     }
     private void AirQualityRingColour()
     {
-
         var Pm25 = _entities.Sensor.DomPm25.AsNumeric().State;
         var Pm10 = _entities.Sensor.DomPm10.AsNumeric().State;
         string color = null;

@@ -24,8 +24,10 @@ public class AlarmActions
     }
 
     private void AlarmArmed()
-    {       
-        if (_entities.AlarmControlPanel.Alarm.State == "armed_away")
+    {
+        var alarmState = _entities.AlarmControlPanel.Alarm.State;
+
+        if (alarmState == "armed_away")
         {
             Thread alarmSound = new Thread(() => AlarmSound());
             alarmSound.Start();
@@ -40,13 +42,14 @@ public class AlarmActions
 
     private void FlashingLights()
     {
+        var alarmState = _entities.AlarmControlPanel.Alarm.State;
         var allLights = new[] {
          _entities.Light.Airqualityoutdoorledring,
          _entities.Light.Led,
          _entities.Light.Hallled
         };
 
-        while (_entities.AlarmControlPanel.Alarm.State == "armed_away")
+        while (alarmState == "armed_away")
         {
             allLights.TurnOn(transition: 0, colorName: "Gold", brightness: 255);
             Thread.Sleep(500);
@@ -56,10 +59,10 @@ public class AlarmActions
     }
     private void AlarmSound()
     {
-
+        var alarmState = _entities.AlarmControlPanel.Alarm.State;
         var mediaPlayer = _entities.MediaPlayer.VlcTelnet;
 
-        while (_entities.AlarmControlPanel.Alarm.State == "armed_away")
+        while (alarmState == "armed_away")
         {
             mediaPlayer.VolumeSet(0.2);
             mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "http://192.168.2.5:8123/local/sounds/alarm.mp3");

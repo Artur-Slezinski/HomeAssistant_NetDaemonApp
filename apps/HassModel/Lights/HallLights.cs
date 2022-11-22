@@ -74,16 +74,20 @@ public class HallLights
 
         if (alarmState == "disarmed")
         {
-
-            if (motion[0] == "off" && motion[1] == "off" && light.Attributes.Effect == "Wipe up on")
+            if (motion[0] == "off" && motion[1] == "off")
             {
+                light.TurnOff(transition: 2);
+            }
 
-                light.TurnOn(effect: "Wipe up off");
-            }
-            else if (motion[0] == "off" && motion[1] == "off" && light.Attributes.Effect == "Wipe down on")
-            {
-                light.TurnOn(effect: "Wipe down off");
-            }
+            //if (motion[0] == "off" && motion[1] == "off" && light.Attributes.Effect == "Wipe up on")
+            //{
+
+            //    light.TurnOn(effect: "Wipe up off");
+            //}
+            //else if (motion[0] == "off" && motion[1] == "off" && light.Attributes.Effect == "Wipe down on")
+            //{
+            //    light.TurnOn(effect: "Wipe down off");
+            //}
         }
     }
 }

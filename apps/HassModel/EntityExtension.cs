@@ -2,10 +2,7 @@
 using System.Reactive.Linq;
 
 namespace NetDaemon.HassModel.Entities
-{
-    /// <summary>
-    /// Provides Extension methods for Entities
-    /// </summary>
+{    
     public static class EntityExtensions
     {
         public static IDisposable WhenTurnsOn<T, TAttributes>(this Entity<T, EntityState<TAttributes>, TAttributes> entity,

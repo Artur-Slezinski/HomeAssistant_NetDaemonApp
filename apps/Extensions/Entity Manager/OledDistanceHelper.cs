@@ -18,14 +18,14 @@ public class OledDistanceHelper
 
     private void Initialize()
     {
-        var entityId = "sensor.oledDistance";
+        var entityId = "sensor.oledDistance";       
 
-        CreateAsync(entityId);
+        CreateAsync(entityId); 
 
-        _entities.Sensor.Weatherdisplaydistance
-            .StateAllChanges()
+        _entities.Sensor.Weatherdisplaydistance 
+            .StateAllChanges() 
             .Delay(TimeSpan.FromSeconds(2))
-            .Subscribe(_ => OledState(entityId));        
+            .Subscribe(_ => OledState(entityId)); 
     }
 
     async Task CreateAsync(string entityId, EntityCreationOptions? options = null, object? additionalConfig = null)
@@ -33,6 +33,7 @@ public class OledDistanceHelper
         await _entityManager.CreateAsync(entityId)
             .ConfigureAwait(false);
     }
+
     async Task SetStateAsync(string entityId, string state)
     {
         await _entityManager.SetStateAsync(entityId, state)
@@ -40,8 +41,7 @@ public class OledDistanceHelper
     }
 
     private void OledState(string entityId)
-    {
-        //var entityId = "sensor.oledDistance";
+    {        
         var distance = _entities.Sensor.Weatherdisplaydistance.State;
         var sunPosition = _entities.Sun.Sun.State;
 
@@ -55,8 +55,8 @@ public class OledDistanceHelper
             {
                 SetStateAsync(entityId, "0.2");
             }
-        }
-
+            distance = _entities.Sensor.Weatherdisplaydistance.State;
+        }        
         SetStateAsync(entityId, "0");
     }
 }

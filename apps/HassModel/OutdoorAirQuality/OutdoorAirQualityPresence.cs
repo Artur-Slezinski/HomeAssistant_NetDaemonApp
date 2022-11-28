@@ -1,6 +1,4 @@
-﻿using System.Reactive.Concurrency;
-
-namespace AirQuality;
+﻿namespace AirQuality;
 [NetDaemonApp]
 
 public class OutdoorAirQualityPresence

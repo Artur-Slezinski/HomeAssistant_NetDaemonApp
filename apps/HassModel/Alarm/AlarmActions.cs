@@ -14,20 +14,20 @@ public class AlarmActions
 
     private void Initialize()
     {
-        var motion = new[]
+        var motion = new[] 
             {_entities.BinarySensor.Hallbathroompir,
              _entities.BinarySensor.Hallbedroompir};
 
         motion
-        .StateChanges().Where(e => e.New?.State == "on")
-        .Subscribe(_ => AlarmArmed());
+        .StateChanges().Where(e => e.New?.State == "on") 
+        .Subscribe(_ => AlarmArmed()); 
     }
 
     private void AlarmArmed()
     {
         var alarmState = _entities.AlarmControlPanel.Alarm.State;
 
-        if (alarmState == "armed_away")
+        if (alarmState == "armed_away") 
         {
             Thread alarmSound = new Thread(() => AlarmSound());
             alarmSound.Start();
@@ -42,10 +42,10 @@ public class AlarmActions
 
     private void FlashingLights()
     {
-        var alarmState = _entities.AlarmControlPanel.Alarm.State;
-        var allLights = new[] {
+        var alarmState = _entities.AlarmControlPanel.Alarm.State;        
+        var allLights = new[] { 
          _entities.Light.Airqualityoutdoorledring,
-         _entities.Light.Led,
+         _entities.Light.Outdoortempled,
          _entities.Light.Hallled
         };
 
@@ -55,6 +55,7 @@ public class AlarmActions
             Thread.Sleep(500);
             allLights.TurnOn(transition: 0, colorName: "Blue", brightness: 255);
             Thread.Sleep(500);
+            alarmState = _entities.AlarmControlPanel.Alarm.State;
         }
     }
     private void AlarmSound()
@@ -67,6 +68,7 @@ public class AlarmActions
             mediaPlayer.VolumeSet(0.2);
             mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "http://192.168.2.5:8123/local/sounds/alarm.mp3");
             Thread.Sleep(1000);
+            alarmState = _entities.AlarmControlPanel.Alarm.State;
         }
         mediaPlayer.MediaStop();
     }

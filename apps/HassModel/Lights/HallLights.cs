@@ -78,16 +78,6 @@ public class HallLights
             {
                 light.TurnOff(transition: 2);
             }
-
-            //if (motion[0] == "off" && motion[1] == "off" && light.Attributes.Effect == "Wipe up on")
-            //{
-
-            //    light.TurnOn(effect: "Wipe up off");
-            //}
-            //else if (motion[0] == "off" && motion[1] == "off" && light.Attributes.Effect == "Wipe down on")
-            //{
-            //    light.TurnOn(effect: "Wipe down off");
-            //}
         }
     }
 }

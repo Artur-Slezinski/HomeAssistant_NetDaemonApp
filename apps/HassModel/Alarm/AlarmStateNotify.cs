@@ -19,7 +19,7 @@ public class AlarmStateNotify
     private void Initialize()
     {
         _entities.AlarmControlPanel.Alarm
-            .StateChanges().Where(e => e.New?.State == "armed_away")
+            .StateChanges().Where(e => e.New?.State == "armed_away") 
             .Subscribe(_ =>
             {
                 TtsAlarmArmedNotify();
@@ -27,7 +27,7 @@ public class AlarmStateNotify
             });
 
         _entities.AlarmControlPanel.Alarm
-            .StateChanges().Where(e => e.New?.State == "disarmed")
+            .StateChanges().Where(e => e.New?.State == "disarmed") 
             .Subscribe(_ =>
             {
                 TtsAlarmDisarmedNotify();
@@ -35,7 +35,7 @@ public class AlarmStateNotify
             });
     }
 
-    private void WhatsAppAlarmArmedNotify()
+    private void WhatsAppAlarmArmedNotify() 
     {
         _services.Notify.Whatsapp
             (message: "Alarm uzbrojony!");
@@ -47,7 +47,7 @@ public class AlarmStateNotify
             (message: "Alarm rozbrojony!");
     }
 
-    private void TtsAlarmArmedNotify()
+    private void TtsAlarmArmedNotify() 
     {
         var mediaPlayer = _entities.MediaPlayer.VlcTelnet;
         mediaPlayer.VolumeSet(0.3);

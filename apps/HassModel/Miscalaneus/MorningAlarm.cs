@@ -33,7 +33,7 @@ public class MorningAlarm
         if (alarmTime == isoDate)
         {
             mediaPlayer.VolumeSet(0.6);
-            mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "https://stream.open.fm/21");
+            mediaPlayer.PlayMedia(mediaContentType: "music", mediaContentId: "http://31.192.216.7/2000");
             _scheduler.Schedule(TimeSpan.FromMinutes(15), mediaPlayer.MediaStop);
         }
 

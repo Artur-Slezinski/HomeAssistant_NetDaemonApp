@@ -76,7 +76,7 @@ public class LivingRoomStatePresence
         }
         else
         {
-            ring.TurnOn(brightness: 70, colorName: color);
+            ring.TurnOn(brightness: 50, colorName: color);
         }
     }
 }

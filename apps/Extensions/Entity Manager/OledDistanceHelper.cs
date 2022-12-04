@@ -1,4 +1,5 @@
 ﻿using NetDaemon.Extensions.MqttEntityManager;
+using NetDaemon.Extensions.MqttEntityManager.Models;
 
 namespace Entity_Manager;
 [NetDaemonApp]
@@ -6,26 +7,26 @@ namespace Entity_Manager;
 public class OledDistanceHelper
 {
     private readonly Entities _entities;
-    private readonly IMqttEntityManager _entityManager;
+    private readonly IMqttEntityManager _entityManager;    
 
     public OledDistanceHelper(IMqttEntityManager entityManager, IHaContext ha)
     {
         _entityManager = entityManager;
         _entities = new Entities(ha);
 
-        Initialize();
+        Task initialize = InitializeAsync();
     }
 
-    private void Initialize()
+    private async Task InitializeAsync()
     {
-        var entityId = "sensor.oledDistance";       
+        var entityId = "sensor.oledDistance";
 
-        CreateAsync(entityId); 
+        await CreateAsync(entityId);
 
-        _entities.Sensor.Weatherdisplaydistance 
-            .StateAllChanges() 
+        _entities.Sensor.Weatherdisplaydistance
+            .StateAllChanges()
             .Delay(TimeSpan.FromSeconds(2))
-            .Subscribe(_ => OledState(entityId)); 
+            .Subscribe(async _ => await OledStateAsync(entityId));
     }
 
     async Task CreateAsync(string entityId, EntityCreationOptions? options = null, object? additionalConfig = null)
@@ -37,26 +38,27 @@ public class OledDistanceHelper
     async Task SetStateAsync(string entityId, string state)
     {
         await _entityManager.SetStateAsync(entityId, state)
-            .ConfigureAwait(false);
+            .ConfigureAwait(false);        
     }
+    
 
-    private void OledState(string entityId)
-    {        
+    private async Task OledStateAsync(string entityId)
+    {
         var distance = _entities.Sensor.Weatherdisplaydistance.State;
         var sunPosition = _entities.Sun.Sun.State;
 
-        while (distance >= 0 && distance <= 0.8)
+        if (distance >= 0 && distance <= 0.8)
         {
             if (sunPosition == "above_horizon")
             {
-                SetStateAsync(entityId, "1");
+                await SetStateAsync(entityId, "1");
+                
             }
             else
             {
-                SetStateAsync(entityId, "0.2");
-            }
-            distance = _entities.Sensor.Weatherdisplaydistance.State;
+                await SetStateAsync(entityId, "0.2");                
+            }           
         }        
-        SetStateAsync(entityId, "0");
+        else await SetStateAsync(entityId, "0");
     }
 }

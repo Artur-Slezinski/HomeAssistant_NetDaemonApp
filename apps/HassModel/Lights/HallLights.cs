@@ -34,10 +34,18 @@ public class HallLights
                 _entities.Light.Hallled.TurnOff();
             });
 
+        //motion
+        //    .StateChanges()
+        //    .Where(e => e.New?.State == "off")
+        //    .Delay(TimeSpan.FromSeconds(10))
+        //    .Subscribe(_ => LightTurnOff());
+
         motion
-            .StateChanges().Where(e => e.New?.State == "off")
-            .Delay(TimeSpan.FromSeconds(10))
-            .Subscribe(_ => LightTurnOff());
+          .StateChanges()
+          .WhenStateIsFor(s => s?.State == "off", TimeSpan.FromSeconds(10))
+          .Delay(TimeSpan.FromSeconds(10))
+          .Subscribe(_ => LightTurnOff());
+        
     }
 
     private void TurnOnFromBathroom()

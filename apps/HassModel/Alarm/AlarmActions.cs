@@ -9,32 +9,32 @@ public class AlarmActions
         _entities = new Entities(ha);
         _services = new Services(ha);
 
-        Initialize();        
+        Initialize();
     }
 
     private void Initialize()
     {
-        var motion = new[] 
+        var motion = new[]
             {_entities.BinarySensor.Hallbathroompir,
              _entities.BinarySensor.Hallbedroompir};
 
         motion
-        .StateChanges().Where(e => e.New?.State == "on") 
-        .Subscribe(_ => AlarmArmed()); 
+        .StateChanges().Where(e => e.New?.State == "on")
+        .Subscribe(_ => AlarmArmed());
     }
 
     private void AlarmArmed()
     {
         var alarmState = _entities.AlarmControlPanel.Alarm.State;
 
-        if (alarmState == "armed_away") 
+        if (alarmState == "armed_away")
         {
             Thread alarmSound = new Thread(() => AlarmSound());
             alarmSound.Start();
 
             Thread flashingLights = new Thread(() => FlashingLights());
             flashingLights.Start();
-            
+
             Thread alarmNotification = new Thread(() => AlarmNotification());
             alarmNotification.Start();
         }
@@ -42,8 +42,8 @@ public class AlarmActions
 
     private void FlashingLights()
     {
-        var alarmState = _entities.AlarmControlPanel.Alarm.State;        
-        var allLights = new[] { 
+        var alarmState = _entities.AlarmControlPanel.Alarm.State;
+        var allLights = new[] {
          _entities.Light.Airqualityoutdoorledring,
          _entities.Light.Outdoortempled,
          _entities.Light.Hallled
@@ -75,9 +75,8 @@ public class AlarmActions
 
     public void AlarmNotification()
     {
-        var numbers = SMSNotification.telNumbers;        
-        //_services.Notify.HuaweiLte(target: numbers, message: "Wykryto intruza!") ;
-        //_services.Notify.HuaweiLte(target: "++48xxxxxx", message: "Wykryto intruza!") ;
+        var numbers = SMSNotification.telNumbers;
+        //_services.Notify.HuaweiLte(target: numbers, message: "Wykryto intruza!");
     }
 
 }

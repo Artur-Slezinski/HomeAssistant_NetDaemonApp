@@ -23,7 +23,7 @@ public class LivingRoomStatePresence
         TempRingColour();
 
         _scheduler.SchedulePeriodic(TimeSpan.FromSeconds(120), () => TempRingColour());
-
+        
         _entities.AlarmControlPanel.Alarm
             .StateChanges().Where(e => e.New?.State == "disarmed")
             .Delay(TimeSpan.FromSeconds(1))
